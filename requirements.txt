@@ -16,6 +16,6 @@ python-dotenv==1.0.0
 requests==2.31.0
 ujson==5.9.0
 urllib3==2.2.1
-wavelink==2.1.0
+wavelink==3.2.0
 yarl
 asyncssh
