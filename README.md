@@ -1,8 +1,9 @@
 # Stern's AltBot
 This is Nythepegesus' implementation of AltBot for the AltStore/Delta servers. This bot attempts to implement all the old bot's commands and introduce more features. 
 
-## Features
- * **Coming Soon**
+## Coming Soon
+ * Update to the latest discord.py
+ * More Slash Commands
 
 ## Installation
 Make sure you have Python 3.10 installed, and run the following in a virtual environment:
