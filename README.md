@@ -21,6 +21,8 @@ If you want to contribute to the bot in any way, feel free! I'll try and throw t
 
 [Ny-AltBot](https://github.com/nythepegasus/ny-altbot) by nythepegasus
 
+For rewriting the bot.
+
 [DeltaBot](https://github.com/deltadiscordbot/deltabot) by Jimmy#9999
 
 For the creation of the original bot.
