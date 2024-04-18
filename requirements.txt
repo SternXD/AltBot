@@ -14,7 +14,7 @@ pushover-nythepegasus==1.0.1
 pyparsing==3.0.9
 python-dotenv==1.0.0
 requests==2.31.0
-ujson==5.7.0
+ujson==5.9.0
 urllib3==2.2.1
 wavelink==2.1.0
 yarl
