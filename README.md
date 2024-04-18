@@ -15,7 +15,7 @@ Then fill out `conf.json` with the required information from `example-conf.json`
 Finally to run your bot, run `python3 main.py`.
 
 ## Contributing
-If you want to contribute to the bot in any way, feel free! I'll try and throw together some Github templates for pull requests and issues eventually. 
+If you want to contribute to the bot in any way, feel free! I'll assemble some Github templates for pull requests and issues eventually. 
 
 ### Credits
 
