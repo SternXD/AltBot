@@ -1,5 +1,5 @@
 # Stern's AltBot
-This is Nythepegesus' implementation of AltBot for the Delta servers. This bot attempts to implement all the old bot's commands and introduce more features. 
+This is Nythepegesus' implementation of AltBot for the AltStore servers. This bot attempts to implement all the old bot's commands and introduce more features. 
 
 ## Features
  * **Coming Soon**
