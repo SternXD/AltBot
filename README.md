@@ -30,4 +30,4 @@ For the creation of the original bot.
 
 [Joelle (Lonkle)](https://github.com/lonkle)
 
-For giving me the inspiration to continue creating the bot.
+For giving nythepegasus the inspiration to continue creating the bot.
