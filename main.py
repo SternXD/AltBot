@@ -210,8 +210,4 @@ async def on_app_command_error(interaction: Interaction, error: AppCommandError)
         print(error)
         raise error
 
-@client.tree.command()
-async def ping(ctx: SlashContext):
-    await ctx.send("Pong!")
-
 client.run(TOKEN)
