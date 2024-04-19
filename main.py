@@ -111,37 +111,41 @@ class MyClient(commands.Bot):
        ## self.check_anisette.start()
        ## self.change_status.start()
 
-        self.db = await asyncpg.connect(user=self.conf["POSTGRES_USER"],
-                                        password=self.conf["POSTGRES_PASSWORD"],
-                                        database=self.conf["POSTGRES_DB"],
-                                        host=self.conf["POSTGRES_HOST"])
-        print("Connected to postgres!")
+async def connect_to_postgres(self):
+    self.db = await asyncpg.connect(user=self.conf["POSTGRES_USER"],
+                                    password=self.conf["POSTGRES_PASSWORD"],
+                                    database=self.conf["POSTGRES_DB"],
+                                    host=self.conf["POSTGRES_HOST"])
+    print("Connected to postgres!")
 
-        menus = await self.db.fetch("SELECT * FROM role_menus")
-        for menu in menus:
-            roles = await self.db.fetch("SELECT * FROM role_menu_info WHERE mid = $1 ORDER BY rid ASC", menu["id"])
-            r = roles[0]
-            choices = [discord.SelectOption(label=role["rname"], description=role["rdesc"], value=role["rid"], emoji=role["remoji"]) for role in roles]
-            if r["mmchoice"] > 1:
-                choices.append(discord.SelectOption(label="Remove Roles",
-                                                    description="This removes all listed roles above, so that you can rechoose which roles you actually want.", 
-                                                    value="0"))
-            view = RoleDropdownView(RoleDropdown(options=choices, placeholder=r["mplaceholder"], min_values=1,
-                                                 max_values=r["mmchoice"], custom_id=str(r["mid"])))
-            self.add_view(view)
+async def main(self):
+    await self.connect_to_postgres()
 
-        update_channels = await self.db.fetch("SELECT * FROM update_channels")
-        self.update_channels = [await self.fetch_channel(channel["channel_id"]) for channel in update_channels]
+    menus = await self.db.fetch("SELECT * FROM role_menus")
+    for menu in menus:
+        roles = await self.db.fetch("SELECT * FROM role_menu_info WHERE mid = $1 ORDER BY rid ASC", menu["id"])
+        r = roles[0]
+        choices = [discord.SelectOption(label=role["rname"], description=role["rdesc"], value=role["rid"], emoji=role["remoji"]) for role in roles]
+        if r["mmchoice"] > 1:
+            choices.append(discord.SelectOption(label="Remove Roles",
+                                                description="This removes all listed roles above, so that you can rechoose which roles you actually want.", 
+                                                value="0"))
+        view = RoleDropdownView(RoleDropdown(options=choices, placeholder=r["mplaceholder"], min_values=1,
+                                             max_values=r["mmchoice"], custom_id=str(r["mid"])))
+        self.add_view(view)
 
-        self.update_apps.start()
-        for ext in ["modules." + e for e in self.conf["DISCORD_MODULES"].split(",")]:
-            try:
-                await self.load_extension(ext)
-                print(f"Loaded extension {ext}")
-            except Exception as e:
-                print(f'Failed to load extension {ext}.', file=sys.stderr)
-                print(f"{type(e).__name__} - {e}")
-                traceback.print_exc()
+    update_channels = await self.db.fetch("SELECT * FROM update_channels")
+    self.update_channels = [await self.fetch_channel(channel["channel_id"]) for channel in update_channels]
+
+    self.update_apps.start()
+    for ext in ["modules." + e for e in self.conf["DISCORD_MODULES"].split(",")]:
+        try:
+            await self.load_extension(ext)
+            print(f"Loaded extension {ext}")
+        except Exception as e:
+            print(f'Failed to load extension {ext}.', file=sys.stderr)
+            print(f"{type(e).__name__} - {e}")
+            traceback.print_exc()
 
    ## async def reset_anisette(self):
     ##    try:
@@ -165,15 +169,15 @@ class MyClient(commands.Bot):
        ## except Exception as ex:
         ##    print(ex)
 
-    async def close(self):
-        if self.session is not None:
-            await self.session.close(self.session)
-        if self.ssh_conn is not None:
-            self.ssh_conn.close()
-        await super().close()
+   # async def close(self):
+    #    if self.session is not None:
+     #       await self.session.close(self.session)
+      #  if self.ssh_conn is not None:
+       #     self.ssh_conn.close()
+        # await super().close()
 
-    def run(self):
-        super().run(self.__TOKEN)
+    # def run(self):
+   #     super().run(self.__TOKEN)
 
 
 client = MyClient({**os.environ, **dotenv.dotenv_values()})
