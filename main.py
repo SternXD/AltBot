@@ -13,7 +13,6 @@ from discord import Embed, Interaction
 from discord.app_commands import AppCommandError, MissingRole, MissingAnyRole
 from discord.ext import commands, tasks
 from discord.ext.commands.errors import CheckFailure, CommandNotFound
-from discord_slash import SlashContext
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
