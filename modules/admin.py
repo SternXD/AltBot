@@ -138,7 +138,7 @@ class AdminCog(Cog, name="Admin"):
     @yeet.autocomplete("duration")
     async def yeet_ac(self, interaction: discord.Interaction, current: str):
         date_formats = ["1h", "1d", "1w", "30m", "15m"]
-        ret = [date_str for date_str in date_formats if date_str.startswith(string.lower())]
+        ret = [date_str for date_str in date_formats if date_str.startswith(current.lower())]
         if len(ret) == 0:
             return date_formats
 
