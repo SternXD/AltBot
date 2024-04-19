@@ -31,7 +31,7 @@ class MyClient(commands.Bot):
         self.owner_id = self.conf["DISCORD_OID"]
         self.update_channels = None
         self.remove_command("help")
-
+        guild_ids = [625714187078860810]
     async def on_ready(self) -> None:
         print(f'Logged in as {self.user} (ID: {self.user.id})')
         print('------')
@@ -216,7 +216,7 @@ async def on_app_command_error(interaction: Interaction, error: AppCommandError)
 async def on_ready():
     print("Ready!")
 
-@slash.slash(name="Ping", description="Ping command", guild_ids=625714187078860810)
+@slash.slash(name="Ping", description="Ping command", guild_ids=guild_ids)
 async def _ping(ctx):  # Defines a new "context" (ctx) command called "ping."
     await ctx.send("Pong!")
 
