@@ -16,6 +16,8 @@ from discord.ext.commands.errors import CheckFailure, CommandNotFound
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+# Import the custom view
+
 class MyClient(commands.Bot):
     def __init__(self, conf_data: dict, *args, **kwargs):
         super().__init__(*args, command_prefix=conf_data["DISCORD_PREFIX"], intents=discord.Intents().all(),
@@ -31,7 +33,7 @@ class MyClient(commands.Bot):
     async def on_ready(self) -> None:
         print(f'Logged in as {self.user} (ID: {self.user.id})')
         print('------')
-
+##        await self.setup_hook()
     @tasks.loop(minutes=5)
     async def update_apps(self) -> None:
         await self.wait_until_ready()
@@ -71,7 +73,7 @@ class MyClient(commands.Bot):
         presence = discord.Game(f"{status} games on Delta with {len(self.users)} others!")
         await self.change_presence(activity=presence)
 
-    @tasks.loop(seconds=5)
+    # @tasks.loop(seconds=5)
    ## async def check_anisette(self) -> None:
       ##  await self.wait_until_ready()
        ## async with self.session(timeout=aiohttp.ClientTimeout(total=5)) as session:
@@ -130,10 +132,10 @@ async def main(self):
         view = RoleDropdownView(RoleDropdown(options=choices, placeholder=r["mplaceholder"], min_values=1,
                                              max_values=r["mmchoice"], custom_id=str(r["mid"])))
         self.add_view(view)
-
+#       self.role_menus.append(view)
     update_channels = await self.db.fetch("SELECT * FROM update_channels")
     self.update_channels = [await self.fetch_channel(channel["channel_id"]) for channel in update_channels]
-
+# 
     self.update_apps.start()
     for ext in ["modules." + e for e in self.conf["DISCORD_MODULES"].split(",")]:
         try:
@@ -173,13 +175,21 @@ async def main(self):
        #     self.ssh_conn.close()
         # await super().close()
 
+# Load the configuration file
+with open('conf.json') as f:
+    config = json.load(f)
+
+# Get the token from the configuration
+TOKEN = config['TOKEN']
+
 def run(self):
     self.run(token=self.__TOKEN)
 
+# Create the client
 
 client = MyClient({**os.environ, **dotenv.dotenv_values()})
 
-
+# Add the event listeners
 @client.listen()
 async def on_command_error(ctx, error):
     await ctx.message.delete()
@@ -201,4 +211,4 @@ async def on_app_command_error(interaction: Interaction, error: AppCommandError)
         raise error
 
 
-client.run()
+client.run(TOKEN)
