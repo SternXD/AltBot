@@ -9,7 +9,9 @@ This is Nythepegesus' implementation of AltBot for the AltStore/Delta servers. T
 
 - [x] Remove Pushover related code
 
-- [] More Slash Commands
+- More Slash Commands
+
+- And more! :)
 
 
 ## Installation
