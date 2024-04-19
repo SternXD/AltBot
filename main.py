@@ -6,16 +6,13 @@ import dotenv
 import aiohttp
 import asyncpg
 import discord
-## import asyncssh
 import traceback
 from datetime import datetime
 from packaging import version
 from discord import Embed, Interaction
-from discord.app_commands import AppCommandError
-from discord.app_commands.errors import MissingRole, MissingAnyRole
+from discord.app_commands import AppCommandError, MissingRole, MissingAnyRole
 from discord.ext import commands, tasks
 from discord.ext.commands.errors import CheckFailure, CommandNotFound
-from utils.views import RoleDropdown, RoleDropdownView
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -177,7 +174,7 @@ async def main(self):
         # await super().close()
 
     # def run(self):
-   #     super().run(self.__TOKEN)
+        self.run(token=self.__TOKEN)
 
 
 client = MyClient({**os.environ, **dotenv.dotenv_values()})
