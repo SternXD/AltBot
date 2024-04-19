@@ -3,13 +3,13 @@ This is Nythepegesus' implementation of AltBot for the AltStore/Delta servers. T
 
 ## Coming Soon
 
-[x] Fix Docker Compose environment variables
+- [x] Fix Docker Compose environment variables
 
-[x] Update to the latest discord.py
+- [x] Update to the latest discord.py
 
-[x] Remove Pushover related code
+- [x] Remove Pushover related code
 
-[] More Slash Commands
+- [] More Slash Commands
 
 
 ## Installation
