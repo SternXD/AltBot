@@ -141,20 +141,6 @@ async def main(self):
         for module in modules:
             bot.load_extension(module)
 
-        modules = os.getenv('DISCORD_MODULES').split(',')
-bot = MyClient()  # Replace YourBotClass with the actual class name of your bot
-
-modules = os.getenv('DISCORD_MODULES').split(',')
-for module in modules:
-    try:
-        bot.load_extension(module)
-        if module in bot.extensions:
-            print(f'Successfully loaded module {module}')
-        else:
-            print(f'Failed to load module {module}')
-    except commands.ExtensionError as e:
-        print(f'Failed to load module {module}. {type(e).__name__}: {e}')
-
    ## async def reset_anisette(self):
     ##    try:
      ##       create_tmux = await self.ssh_conn.run("tmux new-session -d -s anisette")
