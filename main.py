@@ -13,6 +13,7 @@ from discord import Embed, Interaction
 from discord.app_commands import AppCommandError, MissingRole, MissingAnyRole
 from discord.ext import commands, tasks
 from discord.ext.commands.errors import CheckFailure, CommandNotFound
+from discord_slash import SlashCommand # The lib
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,8 +21,9 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 class MyClient(commands.Bot):
     def __init__(self, conf_data: dict, *args, **kwargs):
-        super().__init__(*args, command_prefix=conf_data["DISCORD_PREFIX"], intents=discord.Intents().all(),
-                         application_id=conf_data["DISCORD_APPID"], **kwargs)
+        super().__init__(*args, command_prefix=conf_data["DISCORD_PREFIX"], intents=discord.Intents.all(), **kwargs)
+        client = commands.Bot(command_prefix="-", intents=intents)
+        slash = SlashCommand(client, sync_commands=True, application_id=conf_data["DISCORD_APPID"])
         self.session = None
         self.db = None
         self.__TOKEN = conf_data.pop("DISCORD_TOKEN")
@@ -209,6 +211,18 @@ async def on_app_command_error(interaction: Interaction, error: AppCommandError)
     else:
         print(error)
         raise error
+# Run the client
+@client.event
+async def on_ready():
+    print("Ready!")
 
+@slash.slash(name="Ping", description="Ping command", guild_ids=625714187078860810)
+async def _ping(ctx):  # Defines a new "context" (ctx) command called "ping."
+    await ctx.send("Pong!")
+
+
+@client.command(name="test") # Test command which works
+async def test(ctx):
+    await ctx.send("test")
 
 client.run(TOKEN)
