@@ -15,7 +15,7 @@ This is Nythepegesus' implementation of AltBot for the AltStore/Delta servers. T
 
 
 ## Installation
-Make sure you have Python 3.12 installed, and run the following in a virtual environment:
+Make sure you have Python 3.11 installed, and run the following in a virtual environment:
 ```command line
 python3 -m pip install -r requirements.txt
 ```
