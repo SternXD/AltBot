@@ -32,7 +32,8 @@ services:
       - DISCORD_PREFIX=${prefix}
       - DISCORD_APPID=${application_id}
       - DISCORD_OID=${owner_id}
-      
+      - PUSHOVER_UK=${PUSHOVER_UK}
+      - PUSHOVER_AK=${PUSHOVER_AK}
 
 volumes:
   pgdata:
