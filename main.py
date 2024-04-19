@@ -111,8 +111,8 @@ class MyClient(commands.Bot):
        ## self.check_anisette.start()
        ## self.change_status.start()
 
-async def connect_to_postgres(self):
-    self.db = await asyncpg.connect(user=self.conf["POSTGRES_USER"],
+    async def connect_to_postgres(self):
+        self.db = await asyncpg.connect(user=self.conf["POSTGRES_USER"],
                                     password=self.conf["POSTGRES_PASSWORD"],
                                     database=self.conf["POSTGRES_DB"],
                                     host=self.conf["POSTGRES_HOST"])
