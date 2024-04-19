@@ -132,19 +132,13 @@ async def main(self):
         view = RoleDropdownView(RoleDropdown(options=choices, placeholder=r["mplaceholder"], min_values=1,
                                              max_values=r["mmchoice"], custom_id=str(r["mid"])))
         self.add_view(view)
-#       self.role_menus.append(view)
-    update_channels = await self.db.fetch("SELECT * FROM update_channels")
-    self.update_channels = [await self.fetch_channel(channel["channel_id"]) for channel in update_channels]
-# 
-    self.update_apps.start()
-    for ext in ["modules." + e for e in self.conf["DISCORD_MODULES"].split(",")]:
-        try:
-            await self.load_extension(ext)
-            print(f"Loaded extension {ext}")
-        except Exception as e:
-            print(f'Failed to load extension {ext}.', file=sys.stderr)
-            print(f"{type(e).__name__} - {e}") 
-            traceback.print_exc()
+        bot = MyClient()  # Replace YourBotClass with the actual class name of your bot
+        update_channels = await self.db.fetch("SELECT * FROM update_channels")
+        self.update_channels = [await self.fetch_channel(channel["channel_id"]) for channel in update_channels]
+
+        modules = os.getenv('DISCORD_MODULES').split(',')
+        for module in modules:
+            bot.load_extension(module)
 
    ## async def reset_anisette(self):
     ##    try:
