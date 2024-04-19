@@ -8,7 +8,6 @@ import asyncpg
 import discord
 import asyncssh
 import traceback
-import pushover as po
 from datetime import datetime
 from packaging import version
 from discord import Embed, Interaction
@@ -29,7 +28,6 @@ class MyClient(commands.Bot):
         self.__TOKEN = conf_data.pop("DISCORD_TOKEN")
         self.conf = conf_data
         self.owner_id = self.conf["DISCORD_OID"]
-        self.pclient = po.Client(self.conf["PUSHOVER_UK"], self.conf["PUSHOVER_AK"])
         self.update_channels = None
         self.remove_command("help")
 
