@@ -173,8 +173,8 @@ async def main(self):
        #     self.ssh_conn.close()
         # await super().close()
 
-    # def run(self):
-        self.run(token=self.__TOKEN)
+def run(self):
+    self.run(token=self.__TOKEN)
 
 
 client = MyClient({**os.environ, **dotenv.dotenv_values()})
