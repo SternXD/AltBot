@@ -32,7 +32,7 @@ services:
       - DISCORD_OID=${owner_id}
       - PUSHOVER_UK=${PUSHOVER_UK}
       - PUSHOVER_AK=${PUSHOVER_AK}
-
+      - DISCORD_MODULES=modules.tags,modules.utils,modules.sources,modules.reactionroles,modules.admin,modules.fun,modules.music,modules.jitreroles,modules.jitbotremains
 volumes:
   pgdata:
 

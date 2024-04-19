@@ -1,19 +1,24 @@
 {
-    "TOKEN": "000000000000000000000000.000000.000000000000000000000000000",
+    "TOKEN": "0",
     "cat_token": "00000000-0000-0000-0000-000000000000",
-    "owner_id": 123456789098765432,
-    "application_id": 123456789098765432,
-    "prefix": "buh!",
+    "owner_id": "0",
+    "application_id": "0",
+    "prefix": "!",
     "modules": [
         "modules.tags",
         "modules.utils",
         "modules.sources",
-        "modules.reactionroles"
+        "modules.reactionroles",
+	    "modules.admin",
+	    "modules.fun",
+	    "modules.music",
+	    "modules.jitreroles",
+	    "modules.jitbotremains"
     ],
     "statuses": [],
     "postgres": {
-        "user": "user",
-        "password": "supersecure",
+        "user": "0",
+        "password": "0",
         "database": "altbot",
         "host": "127.0.0.1"
     }

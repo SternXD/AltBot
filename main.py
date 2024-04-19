@@ -13,6 +13,7 @@ from discord import Embed, Interaction
 from discord.app_commands import AppCommandError, MissingRole, MissingAnyRole
 from discord.ext import commands, tasks
 from discord.ext.commands.errors import CheckFailure, CommandNotFound
+from discord_slash import SlashContext
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -73,7 +74,7 @@ class MyClient(commands.Bot):
         presence = discord.Game(f"{status} games on Delta with {len(self.users)} others!")
         await self.change_presence(activity=presence)
 
-    # @tasks.loop(seconds=5)
+# @tasks.loop(seconds=5)
    ## async def check_anisette(self) -> None:
       ##  await self.wait_until_ready()
        ## async with self.session(timeout=aiohttp.ClientTimeout(total=5)) as session:
@@ -143,14 +144,14 @@ async def main(self):
             print(f"Loaded extension {ext}")
         except Exception as e:
             print(f'Failed to load extension {ext}.', file=sys.stderr)
-            print(f"{type(e).__name__} - {e}")
+            print(f"{type(e).__name__} - {e}") 
             traceback.print_exc()
 
    ## async def reset_anisette(self):
     ##    try:
      ##       create_tmux = await self.ssh_conn.run("tmux new-session -d -s anisette")
-      ##      result_one = await self.ssh_conn.run("tmux send-keys -t 'anisette:0' C-c 'cd /home/ny/prod/omnisette && ./omnisette-server-linux --http-port 6969' Enter")
-       ##     result_two = await self.ssh_conn.run("tmux send-keys -t 'anisette:0' 'cd /home/ny/prod/omnisette && ./omnisette-server-linux --http-port 6969' Enter")
+      ##      result_one = await self.ssh_conn.run("tmux send-keys -t 'anisette:0' C-c 'cd /root/prod/omnisette && ./omnisette-server-linux --http-port 6969' Enter")
+       ##     result_two = await self.ssh_conn.run("tmux send-keys -t 'anisette:0' 'cd /root/prod/omnisette && ./omnisette-server-linux --http-port 6969' Enter")
 
           ##  print(create_tmux.stdout, end='')
            ## print(result_one.stdout, end='')
@@ -210,5 +211,8 @@ async def on_app_command_error(interaction: Interaction, error: AppCommandError)
         print(error)
         raise error
 
+@client.tree.command()
+async def ping(ctx: SlashContext):
+    await ctx.send("Pong!")
 
 client.run(TOKEN)
