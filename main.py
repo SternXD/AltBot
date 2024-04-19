@@ -75,41 +75,41 @@ class MyClient(commands.Bot):
         await self.change_presence(activity=presence)
 
     @tasks.loop(seconds=5)
-   # async def check_anisette(self) -> None:
-      #  await self.wait_until_ready()
-       # async with self.session(timeout=aiohttp.ClientTimeout(total=5)) as session:
-        #    try:
-         #       async with session.get("http://ani.sidestore.io:6969/", timeout=aiohttp.ClientTimeout(total=5)) as response:
-          #          try:
-           #             data = json.loads(await response.text())
-            #            self._lsa = datetime.now()
-                        # print(f"Successful anisette at {self._lsa}")
-             #           return
-              #      except json.decoder.JSONDecodeError:
-               #         print(f"JSONDecodeError: Something funky is going on, here is `response.text()`: '{await response.text()}'\n"
-                #              f"Last successful anisette: {self._lsa}")
-                 #       return await self.reset_anisette()
+   ## async def check_anisette(self) -> None:
+      ##  await self.wait_until_ready()
+       ## async with self.session(timeout=aiohttp.ClientTimeout(total=5)) as session:
+        ##    try:
+         ##       async with session.get("http://ani.sidestore.io:6969/", timeout=aiohttp.ClientTimeout(total=5)) as response:
+          ##          try:
+           ##             data = json.loads(await response.text())
+            ##            self._lsa = datetime.now()
+                        ## print(f"Successful anisette at {self._lsa}")
+             ##           return
+              ##      except json.decoder.JSONDecodeError:
+               ##         print(f"JSONDecodeError: Something funky is going on, here is `response.text()`: '{await response.text()}'\n"
+                ##              f"Last successful anisette: {self._lsa}")
+                 ##       return await self.reset_anisette()
 
-          #  except aiohttp.client_exceptions.ClientConnectorError as e:
-           #     print(f'ClientConnectorErrorError: {e}\n'
-            #          f'Last successful anisette: {self._lsa}')
-            # except Exception as e:
-              #  print(f'Exception unhandled: {e}\n'
-               #       f'Last successful anisette: {self._lsa}')
-          #  return await self.reset_anisette()
-
-   # async def setup_hook(self) -> None:
-   #     self.session = aiohttp.ClientSession
-    #    try:
-     #       self.ssh_conn = await asyncssh.connect(self.conf["SSH_HOST"],
-      #                                             username=self.conf["SSH_USER"],
-       #                                            client_keys = [asyncssh.read_private_key("~/.ssh/auto_ed25519")])
-        #    print("Connected to SSH!")
-        # except Exception as e:
-          #  print(f"Couldn't connect to SSH: {e}")
-       # self._lsa = None
-       # self.check_anisette.start()
-       # self.change_status.start()
+          ##  except aiohttp.client_exceptions.ClientConnectorError as e:
+           ##     print(f'ClientConnectorErrorError: {e}\n'
+            ##          f'Last successful anisette: {self._lsa}')
+            ## except Exception as e:
+              ##  print(f'Exception unhandled: {e}\n'
+               ##       f'Last successful anisette: {self._lsa}')
+          ##  return await self.reset_anisette()
+##
+   ## async def setup_hook(self) -> None:
+   ##     self.session = aiohttp.ClientSession
+    ##    try:
+     ##       self.ssh_conn = await asyncssh.connect(self.conf["SSH_HOST"],
+      ##                                             username=self.conf["SSH_USER"],
+       ##                                            client_keys = [asyncssh.read_private_key("~/.ssh/auto_ed25519")])
+        ##    print("Connected to SSH!")
+        ## except Exception as e:
+          ##  print(f"Couldn't connect to SSH: {e}")
+       ## self._lsa = None
+       ## self.check_anisette.start()
+       ## self.change_status.start()
 
         self.db = await asyncpg.connect(user=self.conf["POSTGRES_USER"],
                                         password=self.conf["POSTGRES_PASSWORD"],
@@ -143,27 +143,27 @@ class MyClient(commands.Bot):
                 print(f"{type(e).__name__} - {e}")
                 traceback.print_exc()
 
-   # async def reset_anisette(self):
-    #    try:
-     #       create_tmux = await self.ssh_conn.run("tmux new-session -d -s anisette")
-      #      result_one = await self.ssh_conn.run("tmux send-keys -t 'anisette:0' C-c 'cd /home/ny/prod/omnisette && ./omnisette-server-linux --http-port 6969' Enter")
-       #     result_two = await self.ssh_conn.run("tmux send-keys -t 'anisette:0' 'cd /home/ny/prod/omnisette && ./omnisette-server-linux --http-port 6969' Enter")
+   ## async def reset_anisette(self):
+    ##    try:
+     ##       create_tmux = await self.ssh_conn.run("tmux new-session -d -s anisette")
+      ##      result_one = await self.ssh_conn.run("tmux send-keys -t 'anisette:0' C-c 'cd /home/ny/prod/omnisette && ./omnisette-server-linux --http-port 6969' Enter")
+       ##     result_two = await self.ssh_conn.run("tmux send-keys -t 'anisette:0' 'cd /home/ny/prod/omnisette && ./omnisette-server-linux --http-port 6969' Enter")
 
-          #  print(create_tmux.stdout, end='')
-           # print(result_one.stdout, end='')
-           # print(result_two.stdout, end='')
+          ##  print(create_tmux.stdout, end='')
+           ## print(result_one.stdout, end='')
+           ## print(result_two.stdout, end='')
 
-        #    if create_tmux.exit_status != 0:
-               # print("It's probably already there..")
+        ##    if create_tmux.exit_status != 0:
+               ## print("It's probably already there..")
 
-         #   if result_one.exit_status != 0:
-               # print("Anisette tmux command 1 with ctrl-C failed, oh well.")
+         ##   if result_one.exit_status != 0:
+               ## print("Anisette tmux command 1 with ctrl-C failed, oh well.")
 
-          #  if result_two.exit_status != 0:
-              #  print("Uh oh, this is bad news bears!")
+          ##  if result_two.exit_status != 0:
+              ##  print("Uh oh, this is bad news bears!")
 
-       # except Exception as ex:
-        #    print(ex)
+       ## except Exception as ex:
+        ##    print(ex)
 
     async def close(self):
         if self.session is not None:
