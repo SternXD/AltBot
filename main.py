@@ -4,7 +4,7 @@ import json
 import random
 import dotenv
 import aiohttp
-import asyncpg
+## import asyncpg
 import discord
 import asyncssh
 import traceback
