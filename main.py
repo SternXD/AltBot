@@ -13,6 +13,9 @@ from discord import Embed, Interaction
 from discord.app_commands import AppCommandError, MissingRole, MissingAnyRole
 from discord.ext import commands, tasks
 from discord.ext.commands.errors import CheckFailure, CommandNotFound
+from discord.app_commands import OptionType, Option
+from discord.ext.commands import has_guild_permissions
+from discord.app_commands import create_permission
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -29,92 +32,102 @@ class MyClient(commands.Bot):
         self.owner_id = self.conf["DISCORD_OID"]
         self.update_channels = None
         self.remove_command("help")
+    @commands.slash_command(description="Syncs the commands with Discord", default_permission=False)
+    @commands.has_guild_permissions(administrator=True)
+    async def sync_commands(self, ctx):
+        await self.sync_commands()
+        await ctx.send("Commands synced!")
 
-    async def on_ready(self) -> None:
-        print(f'Logged in as {self.user} (ID: {self.user.id})')
-        print('------')
-##        await self.setup_hook()
-    @tasks.loop(minutes=5)
-    async def update_apps(self) -> None:
-        await self.wait_until_ready()
-        sources = [s['url'] for s in await self.db.fetch("SELECT url FROM sources")]
-        for url in sources:
-            async with self.session(timeout=aiohttp.ClientTimeout(total=5)) as session:
-                async with session.get(url) as response:
-                    data = json.loads(await response.text())
-                    for app in data["apps"]:
-                        old_app = await self.db.fetchrow(f"SELECT * FROM apps WHERE id = '{app['bundleIdentifier']}'")
-                        if old_app is None:
-                            await self.db.execute(f"INSERT INTO apps VALUES('{app['bundleIdentifier']}', '{app['name']}', "
-                                                  f"'{app['version']}', '{data['identifier']}')")
-                            continue
-                        else:
-                            if version.parse(app["version"]) > version.parse(old_app['version']):
-                                await self.db.execute(f"UPDATE apps SET version='{app['version']}', name='{app['name']}'"
-                                                      f"WHERE id = '{app['bundleIdentifier']}'")
-                                emb = Embed(title=f"New {app['name']} update!", color=int(app['tintColor'], 16),
-                                            timestamp=datetime.now())
-                                emb.add_field(name="Version:", value=f"{old_app['version']} -> {app['version']}", inline=False)
-                                emb.add_field(name="Changelog:", value=app['versionDescription'], inline=False)
-                                emb.set_thumbnail(url=app['iconURL'])
-                                emb.set_footer(text="AltBot v. 1.0")
-                                for channel in self.update_channels:
-                                    ping_roles = await self.db.fetch(f"SELECT role_id FROM ping_roles "
-                                                                     f"WHERE guild_id = {channel.guild.id} AND "
-                                                                     f"appbundle_id = '{app['bundleIdentifier']}'")
-                                    guild = self.get_guild(channel.guild.id)
-                                    ret_msg = " ".join([guild.get_role(r["role_id"]).mention for r in ping_roles])
-                                    await channel.send(content=ret_msg, embed=emb)
+        async def on_ready(self) -> None:
+            print(f'Logged in as {self.user} (ID: {self.user.id})')
+            print('------')
+    ##        await self.setup_hook()
+            await self.slash_commands.sync_commands.set_permissions(self.conf["DISCORD_GUILDID"], [
+                create_permission(self.conf["DISCORD_OID"], OptionType.role, True)
+            ])
+        @tasks.loop(minutes=5)
+        async def update_apps(self) -> None:
+            await self.wait_until_ready()
+            sources = [s['url'] for s in await self.db.fetch("SELECT url FROM sources")]
+            for url in sources:
+                async with self.session(timeout=aiohttp.ClientTimeout(total=5)) as session:
+                    async with session.get(url) as response:
+                        data = json.loads(await response.text())
+                        for app in data["apps"]:
+                            old_app = await self.db.fetchrow(f"SELECT * FROM apps WHERE id = '{app['bundleIdentifier']}'")
+                            if old_app is None:
+                                await self.db.execute(f"INSERT INTO apps VALUES('{app['bundleIdentifier']}', '{app['name']}', "
+                                                      f"'{app['version']}', '{data['identifier']}')")
+                                continue
+                            else:
+                                if version.parse(app["version"]) > version.parse(old_app['version']):
+                                    await self.db.execute(f"UPDATE apps SET version='{app['version']}', name='{app['name']}'"
+                                                          f"WHERE id = '{app['bundleIdentifier']}'")
+                                    emb = Embed(title=f"New {app['name']} update!", color=int(app['tintColor'], 16),
+                                                timestamp=datetime.now())
+                                    emb.add_field(name="Version:", value=f"{old_app['version']} -> {app['version']}", inline=False)
+                                    emb.add_field(name="Changelog:", value=app['versionDescription'], inline=False)
+                                    emb.set_thumbnail(url=app['iconURL'])
+                                    emb.set_footer(text="AltBot v. 1.0")
+                                    for channel in self.update_channels:
+                                        ping_roles = await self.db.fetch(f"SELECT role_id FROM ping_roles "
+                                                                         f"WHERE guild_id = {channel.guild.id} AND "
+                                                                         f"appbundle_id = '{app['bundleIdentifier']}'")
+                                        guild = self.get_guild(channel.guild.id)
+                                        ret_msg = " ".join([guild.get_role(r["role_id"]).mention for r in ping_roles])
+            await self.slash_commands.sync_commands.set_permissions(self.conf["DISCORD_GUILDID"], [
+                create_permission(self.conf["DISCORD_OID"], OptionType.role, True)
+            ])
 
-    @tasks.loop(minutes=10)
-    async def change_status(self) -> None:
-        await self.wait_until_ready()
-        status = random.choice(["DS", "N64", "GBA", "GBC", "SNES", "NES"])
-        presence = discord.Game(f"{status} games on Delta with {len(self.users)} others!")
-        await self.change_presence(activity=presence)
+        @tasks.loop(minutes=10)
+        async def change_status(self) -> None:
+                    await self.wait_until_ready()
+                    status = random.choice(["DS", "N64", "GBA", "GBC", "SNES", "NES"])
+                    presence = discord.Game(f"{status} games on Delta with {len(self.users)} others!")
+                    await self.change_presence(activity=presence)
 
-# @tasks.loop(seconds=5)
-   ## async def check_anisette(self) -> None:
-      ##  await self.wait_until_ready()
-       ## async with self.session(timeout=aiohttp.ClientTimeout(total=5)) as session:
-        ##    try:
-         ##       async with session.get("http://ani.sidestore.io:6969/", timeout=aiohttp.ClientTimeout(total=5)) as response:
-          ##          try:
-           ##             data = json.loads(await response.text())
-            ##            self._lsa = datetime.now()
-                        ## print(f"Successful anisette at {self._lsa}")
-             ##           return
-              ##      except json.decoder.JSONDecodeError:
-               ##         print(f"JSONDecodeError: Something funky is going on, here is `response.text()`: '{await response.text()}'\n"
-                ##              f"Last successful anisette: {self._lsa}")
-                 ##       return await self.reset_anisette()
+         # @tasks.loop(seconds=5)
+             ## async def check_anisette(self) -> None:
+                 ##  await self.wait_until_ready()
+                  ## async with self.session(timeout=aiohttp.ClientTimeout(total=5)) as session:
+                    ##    try:
+                     ##       async with session.get("http://ani.sidestore.io:6969/", timeout=aiohttp.ClientTimeout(total=5)) as response:
+                      ##          try:
+                        ##             data = json.loads(await response.text())
+                         ##            self._lsa = datetime.now()
+                                         ## print(f"Successful anisette at {self._lsa}")
+                          ##           return
+                            ##      except json.decoder.JSONDecodeError:
+                             ##         print(f"JSONDecodeError: Something funky is going on, here is `response.text()`: '{await response.text()}'\n"
+                              ##              f"Last successful anisette: {self._lsa}")
+                                ##       return await self.reset_anisette()
 
-          ##  except aiohttp.client_exceptions.ClientConnectorError as e:
-           ##     print(f'ClientConnectorErrorError: {e}\n'
-            ##          f'Last successful anisette: {self._lsa}')
-            ## except Exception as e:
-              ##  print(f'Exception unhandled: {e}\n'
-               ##       f'Last successful anisette: {self._lsa}')
-          ##  return await self.reset_anisette()
-##
-   ## async def setup_hook(self) -> None:
-   ##     self.session = aiohttp.ClientSession
-    ##    try:
-     ##       self.ssh_conn = await asyncssh.connect(self.conf["SSH_HOST"],
-      ##                                             username=self.conf["SSH_USER"],
-       ##                                            client_keys = [asyncssh.read_private_key("~/.ssh/auto_ed25519")])
-        ##    print("Connected to SSH!")
-        ## except Exception as e:
-          ##  print(f"Couldn't connect to SSH: {e}")
-       ## self._lsa = None
-       ## self.check_anisette.start()
-       ## self.change_status.start()
+                      ##  except aiohttp.client_exceptions.ClientConnectorError as e:
+                        ##     print(f'ClientConnectorErrorError: {e}\n'
+                         ##          f'Last successful anisette: {self._lsa}')
+                         ## except Exception as e:
+                            ##  print(f'Exception unhandled: {e}\n'
+                             ##       f'Last successful anisette: {self._lsa}')
+                      ##  return await self.reset_anisette()
+         ##
+             ## async def setup_hook(self) -> None:
+             ##     self.session = aiohttp.ClientSession
+              ##    try:
+                ##       self.ssh_conn = await asyncssh.connect(self.conf["SSH_HOST"],
+                 ##                                             username=self.conf["SSH_USER"],
+                  ##                                            client_keys = [asyncssh.read_private_key("~/.ssh/auto_ed25519")])
+                    ##    print("Connected to SSH!")
+                    ## except Exception as e:
+                      ##  print(f"Couldn't connect to SSH: {e}")
+                  ## self._lsa = None
+                  ## self.check_anisette.start()
+                  ## self.change_status.start()
 
-    async def connect_to_postgres(self):
-        self.db = await asyncpg.connect(user=self.conf["POSTGRES_USER"],
-                                    password=self.conf["POSTGRES_PASSWORD"],
-                                    database=self.conf["POSTGRES_DB"],
-                                    host=self.conf["POSTGRES_HOST"])
+        async def connect_to_postgres(self):
+                self.db = await asyncpg.connect(user=self.conf["POSTGRES_USER"],
+                                                password=self.conf["POSTGRES_PASSWORD"],
+                                                database=self.conf["POSTGRES_DB"],
+                                                host=self.conf["POSTGRES_HOST"])
     print("Connected to postgres!")
 
 async def main(self):
@@ -204,5 +217,8 @@ async def on_app_command_error(interaction: Interaction, error: AppCommandError)
     else:
         print(error)
         raise error
+    
+# Sync the commands
+client.loop.run_until_complete(client.sync_commands())
 
 client.run(TOKEN)
