@@ -205,8 +205,5 @@ async def on_app_command_error(interaction: Interaction, error: AppCommandError)
     else:
         print(error)
         raise error
-    
-# Sync the commands
-client.loop.run_until_complete(client.sync_commands())
 
 client.run(TOKEN)
