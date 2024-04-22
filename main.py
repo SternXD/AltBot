@@ -13,6 +13,7 @@ from discord import Embed, Interaction
 from discord.app_commands import AppCommandError, MissingRole, MissingAnyRole
 from discord.ext import commands, tasks
 from discord.ext.commands.errors import CheckFailure, CommandNotFound
+from discord_slash import SlashCommand
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -29,11 +30,12 @@ class MyClient(commands.Bot):
         self.owner_id = self.conf["DISCORD_OID"]
         self.update_channels = None
         self.remove_command("help")
-
     async def on_ready(self) -> None:
+        slash = SlashCommand(self, sync_commands=True)
         print(f'Logged in as {self.user} (ID: {self.user.id})')
         print('------')
         # Sync the commands
+        await slash.sync_all_commands()
         await self.sync_all_commands()
     @tasks.loop(minutes=5)
     async def update_apps(self) -> None:

@@ -6,6 +6,7 @@ attrs==23.2.0
 certifi==2024.2.2
 charset-normalizer==2.1.1
 discord.py==2.3.2
+discord-py-slash-command
 frozenlist==1.4.1
 idna==3.7
 multidict==6.0.5
