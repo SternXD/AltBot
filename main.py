@@ -13,7 +13,6 @@ from discord import Embed, Interaction
 from discord.app_commands import AppCommandError, MissingRole, MissingAnyRole
 from discord.ext import commands, tasks
 from discord.ext.commands.errors import CheckFailure, CommandNotFound
-from discord_slash import SlashCommand
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -31,12 +30,8 @@ class MyClient(commands.Bot):
         self.update_channels = None
         self.remove_command("help")
     async def on_ready(self) -> None:
-        slash = SlashCommand(self, sync_commands=True)
         print(f'Logged in as {self.user} (ID: {self.user.id})')
         print('------')
-        # Sync the commands
-        await slash.sync_all_commands()
-        await self.sync_all_commands()
     @tasks.loop(minutes=5)
     async def update_apps(self) -> None:
         await self.wait_until_ready()
@@ -207,5 +202,22 @@ async def on_app_command_error(interaction: Interaction, error: AppCommandError)
     else:
         print(error)
         raise error
+
+@client.command(name="hello", description="A simple slash command")
+async def hello(interaction: discord.Interaction):
+    await interaction.response.send_message("Hello, world!", ephemeral=True)
+
+@client.command(description="Sync all global commands")
+@commands.is_owner()
+async def syncslash(ctx: commands.Context):
+    if ctx.author.id == 318114523301150721:
+        try:
+            await client.tree.sync(guild=discord.Object(id=0))
+            await ctx.send("Command tree synced.")
+        except discord.Forbidden:
+            await ctx.send("Unexpected forbidden from application scope.")
+    else:
+        await ctx.send("You must be the owner to use this command.")
+
 
 client.run(TOKEN)
