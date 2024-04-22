@@ -30,14 +30,11 @@ class MyClient(commands.Bot):
         self.update_channels = None
         self.remove_command("help")
 
-    async def sync_commands(self):
-        await self.wait_until_ready()
-        await self.sync_commands()
-
     async def on_ready(self) -> None:
         print(f'Logged in as {self.user} (ID: {self.user.id})')
         print('------')
-##        await self.setup_hook()
+        # Sync the commands
+        await self.sync_commands()
     @tasks.loop(minutes=5)
     async def update_apps(self) -> None:
         await self.wait_until_ready()
@@ -211,6 +208,5 @@ async def on_app_command_error(interaction: Interaction, error: AppCommandError)
     
 # Sync the commands
 client.loop.run_until_complete(client.sync_commands())
-
 
 client.run(TOKEN)
