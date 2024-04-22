@@ -34,7 +34,7 @@ class MyClient(commands.Bot):
         print(f'Logged in as {self.user} (ID: {self.user.id})')
         print('------')
         # Sync the commands
-        await self.sync_commands()
+        await self.sync_all_commands()
     @tasks.loop(minutes=5)
     async def update_apps(self) -> None:
         await self.wait_until_ready()
