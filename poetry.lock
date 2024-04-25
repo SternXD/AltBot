@@ -521,20 +521,32 @@ files = [
 ]
 
 [[package]]
+name = "typing-extensions"
+version = "4.11.0"
+description = "Backported and Experimental Type Hints for Python 3.8+"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "typing_extensions-4.11.0-py3-none-any.whl", hash = "sha256:c1f94d72897edaf4ce775bb7558d5b79d8126906a14ea5ed1635921406c0387a"},
+    {file = "typing_extensions-4.11.0.tar.gz", hash = "sha256:83f085bd5ca59c80295fc2a82ab5dac679cbe02b9f33f7d83af68e241bea51b0"},
+]
+
+[[package]]
 name = "wavelink"
-version = "3.2.0"
+version = "3.3.0"
 description = "A robust and powerful, fully asynchronous Lavalink wrapper built for discord.py in Python."
 optional = false
 python-versions = ">=3.10"
 files = [
-    {file = "wavelink-3.2.0-py3-none-any.whl", hash = "sha256:b4e7715bbab3e3741fd5a486d9e55337847e3e1b3199f64c4f67e42b4dea9866"},
-    {file = "wavelink-3.2.0.tar.gz", hash = "sha256:434a07bae2b99cfdbc58717ded4f02c2f150bbe76dd70d40739f1c112ce5fe1d"},
+    {file = "wavelink-3.3.0-py3-none-any.whl", hash = "sha256:240905f54dbb6f53045ab2b649ada578e9e51178d1eaa2334e295f10061d1cf5"},
+    {file = "wavelink-3.3.0.tar.gz", hash = "sha256:239c98b313dfb39ffa193c7599182c5a747a752e3970ebac12bab7b0d8b08d53"},
 ]
 
 [package.dependencies]
 aiohttp = ">=3.7.4,<4"
 async-timeout = "*"
 "discord.py" = ">=2.0.1"
+typing-extensions = "*"
 yarl = ">=1.9.2"
 
 [[package]]
@@ -643,4 +655,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "e12a10f7619aeb1b919a5a588815e24b0bb94bc8a62257798beb68a204f51a7f"
+content-hash = "5330f202a1a26cff092c76467862084d4c55c716aff6e78124d4dd72eeea36dd"
