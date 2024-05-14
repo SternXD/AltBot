@@ -13,7 +13,7 @@ packaging==24.0
 pyparsing==3.1.2
 python-dotenv==1.0.1
 requests==2.31.0
-ujson==5.9.0
+ujson==5.10.0
 urllib3==2.2.1
 wavelink==3.2.0
 yarl
